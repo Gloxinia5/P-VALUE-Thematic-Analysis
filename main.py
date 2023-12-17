@@ -1,4 +1,5 @@
 import ai
+import process
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 import pandas as pd
 from werkzeug.utils import secure_filename
@@ -6,7 +7,7 @@ import os
 import json
 app = Flask(__name__)
 
-excel_data = {}
+excel_data = {} #Deftonest
 
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'xls', 'xlsx'}
@@ -48,9 +49,15 @@ def upload_file():
             item_data = row[1:].to_dict()
             excel_dict[item_name] = item_data
         excel_data = excel_dict
-    print(excel_data)
+    data = process.to_array(excel_data)
+    test = []
+    for I in data:
+        x = process.json_string_to_dict(ai.prompt(I)["choices"][0]["message"]["content"])
+        while x is None:
+            x = process.json_string_to_dict(ai.prompt(I)["choices"][0]["message"]["content"])
+        test.append(x)
+    print(process.convert_array_to_dict(test))
     return redirect(request.url)
-
 if __name__ == '__main__':
     if not os.path.exists(UPLOAD_FOLDER):
         os.makedirs(UPLOAD_FOLDER)
