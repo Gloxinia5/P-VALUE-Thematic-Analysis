@@ -9,7 +9,7 @@ def prompt(message):
 
     json_data = {
         'model': 'pai-001-light-beta',
-        'max_tokens': 1000,
+        'max_tokens': 2000,
         'messages': [
             {
                 'role': 'system',

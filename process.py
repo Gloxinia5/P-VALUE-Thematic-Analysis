@@ -1,18 +1,86 @@
 import ai
 import json
 import main
-def convert_string_to_json_file(json_string, output_file_path):
-    try:
-        # Parse the JSON-formatted string
-        json_data = json.loads(json_string)
+import pandas as pd
+from openpyxl import Workbook
+from openpyxl.styles import Alignment
+from io import BytesIO
+import asyncio
 
-        # Write the JSON data to a file
-        with open(output_file_path, 'w') as json_file:
-            json.dump(json_data, json_file, indent=4)
+def dict_to_excel(dictionary):
+    """
+    Convert a nested dictionary to a formatted Excel file.
 
-        print(f'Successfully converted and saved JSON to {output_file_path}')
-    except json.JSONDecodeError as e:
-        print(f'Error decoding JSON string: {e}')
+    Parameters:
+    - dictionary (dict): The nested dictionary to be converted.
+
+    Returns:
+    - BytesIO: BytesIO object containing the Excel file.
+    """
+    asyncio.sleep(5)
+    # Initialize lists to store data for each column
+    question_list, response_list, theme_list = [], [], []
+
+    # Set to keep track of added questions
+    added_questions = set()
+
+    # Iterate through the dictionary
+    for key, value in dictionary.items():
+        # Extract data from the dictionary
+        question = value['question']
+        responses = value['Responses']
+
+        # Append data to lists
+        for response in responses:
+            # Check if the question has been added
+            if question in added_questions:
+                question_list.append('')
+            else:
+                question_list.append(question)
+                added_questions.add(question)
+
+            response_list.append(response['response'])
+            theme_list.append(response['theme'])
+
+    # Create a DataFrame
+    df = pd.DataFrame({
+        'Question': question_list,
+        'Response': response_list,
+        'Theme': theme_list
+    })
+
+    # Create a Pandas Excel writer using XlsxWriter as the engine
+    with BytesIO() as excel_buffer:
+        with pd.ExcelWriter(excel_buffer, engine='openpyxl') as writer:
+            # Write the DataFrame to the Excel file
+            df.to_excel(writer, sheet_name='Sheet1', index=False)
+
+            # Access the XlsxWriter workbook and worksheet objects
+            workbook = writer.book
+            worksheet = writer.sheets['Sheet1']
+
+            # Set column width
+            for column in worksheet.columns:
+                max_length = 0
+                column = [cell for cell in column]
+                for cell in column:
+                    try:
+                        if len(str(cell.value)) > max_length:
+                            max_length = len(cell.value)
+                    except:
+                        pass
+                adjusted_width = (max_length + 2)
+                worksheet.column_dimensions[column[0].column_letter].width = adjusted_width
+
+            # Format the cells
+            for row in worksheet.iter_rows(min_row=2, max_col=3, max_row=worksheet.max_row):
+                for cell in row:
+                    cell.alignment = Alignment(wrap_text=True, vertical='center', horizontal='center')
+
+        # Save the Excel buffer
+        excel_buffer.seek(0)
+        return excel_buffer.getvalue()
+
         
 def convert_array_to_dict(array):
     result_dict = {}
