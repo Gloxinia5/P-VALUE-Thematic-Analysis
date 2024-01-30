@@ -18,6 +18,8 @@ numpy==1.26.1
 openai==1.2.3
 opencv-python==4.8.1.78
 packaging==23.2
+pandas
+openpyxl
 Pillow==10.1.0
 pydantic==2.4.2
 pydantic_core==2.10.1

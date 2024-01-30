@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 import os
 import json
 from io import BytesIO
+import test
 
 app = Flask(__name__)
 
@@ -52,15 +53,17 @@ def upload_file():
             excel_dict[item_name] = item_data
         excel_data = excel_dict
     data = process.to_array(excel_data)
-    test = []
+    test1 = []
     for I in data:
         x = process.json_string_to_dict(ai.prompt(I)["choices"][0]["message"]["content"])
         while x is None:
             x = process.json_string_to_dict(ai.prompt(I)["choices"][0]["message"]["content"])
-        test.append(x)
+        test1.append(x)
+
+    print(process.convert_array_to_dict(test1))
 
     return send_file(
-        BytesIO(process.dict_to_excel(process.convert_array_to_dict(test))),
+        BytesIO(process.dict_to_excel(process.convert_array_to_dict(test1))),
         as_attachment=True,
         download_name='output.xlsx',
         mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'

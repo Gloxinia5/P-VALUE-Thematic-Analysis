@@ -3,7 +3,7 @@ import requests
 
 def prompt(message):
     headers = {
-        'Authorization': 'Bearer pk-ksKYKKFkBJEcejWNEAtiLAtbIbnXmkpqQMYotASZfVZuSfqk',
+        'Authorization': 'Bearer pk-HTEwDCjDrMmtFyApFVsGgTeewwNjKTllSEunzkkZGyyiOflM',
         'Content-Type': 'application/json',
     }
 
