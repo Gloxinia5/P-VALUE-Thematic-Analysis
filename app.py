@@ -10,8 +10,6 @@ import test
 
 app = Flask(__name__)
 
-gunicorn --bind=0.0.0.0 --timeout 600 app:app
-
 excel_data = {} #Deftonest
 
 UPLOAD_FOLDER = 'uploads'
