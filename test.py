@@ -1,6 +1,6 @@
 import ai
 import json
-import main
+import app
 import pandas as pd
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font
