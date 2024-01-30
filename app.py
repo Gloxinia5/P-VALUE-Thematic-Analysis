@@ -59,9 +59,6 @@ def upload_file():
         while x is None:
             x = process.json_string_to_dict(ai.prompt(I)["choices"][0]["message"]["content"])
         test1.append(x)
-
-    print(process.convert_array_to_dict(test1))
-
     return send_file(
         BytesIO(process.dict_to_excel(process.convert_array_to_dict(test1))),
         as_attachment=True,
