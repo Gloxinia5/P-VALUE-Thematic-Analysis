@@ -8,21 +8,22 @@ def prompt(message):
     }
 
     json_data = {
-        'model': 'pai-001-light-beta',
-        'max_tokens': 2000,
-        'messages': [
+        "model": "pai-001-light-beta",
+        "max_tokens": 2000,
+        "messages": [
             {
-                'role': 'system',
-                'content': 'You are an helpful assistant.',
+                "role": "system",
+                "content": "You are an helpful assistant.",
             },
             {
-                'role': 'user',
-                'content': message,
-            },
-        ],
+                "role": "user",
+                "content": message,
+            }
+        ]
     }
 
     response = requests.post('https://api.pawan.krd/v1/chat/completions', headers=headers, json=json_data)
+    print(response)
     return response.json()
 
 def test():
